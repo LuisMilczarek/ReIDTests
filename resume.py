@@ -8,9 +8,8 @@ def main() -> None:
         sources=['market1501', 'dukemtmcreid','cuhk03'],
         height=256,
         width=128,
-        batch_size_train=128,
-        combineall=True,
-        transforms=["random_crop"]
+        batch_size_train=256,
+        transforms=['random_flip','random_crop']
     )
     model = torchreid.models.build_model(
         name="resnet50",
@@ -40,13 +39,20 @@ def main() -> None:
         scheduler=scheduler,
         label_smooth=True
     )
+    start_epoch = torchreid.utils.resume_from_checkpoint(
+        'log/resnet50/model/model.pth.tar-30',
+        model,
+        optmizer
+    )
+
 
     engine.run(
         save_dir="log/resnet50",
-        max_epoch=150,
+        max_epoch=120,
         eval_freq=10,
         print_freq=10,
-        test_only=False
+        test_only=False,
+        start_epoch=start_epoch
     )
 
 if __name__ == "__main__":

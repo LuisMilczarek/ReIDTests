@@ -3,6 +3,7 @@ import torchreid
 
 
 def main() -> None:
+    MODEL_PATH = "./model.pt"
     datamanager = torchreid.data.ImageDataManager(
         root="reid-data",
         sources=['market1501', 'dukemtmcreid','cuhk03'],
@@ -41,12 +42,20 @@ def main() -> None:
         label_smooth=True
     )
 
+    start_epoch = torchreid.utils.resume_from_checkpoint(
+        MODEL_PATH,
+        model,
+        optmizer
+    )
+
     engine.run(
         save_dir="log/resnet50",
-        max_epoch=150,
+        max_epoch=1,
         eval_freq=10,
         print_freq=10,
-        test_only=False
+        test_only=True,
+        visrank=True,
+        start_epoch=start_epoch
     )
 
 if __name__ == "__main__":

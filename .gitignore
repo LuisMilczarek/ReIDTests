@@ -1,3 +1,7 @@
 *.pt
 reid-data/
 log*
+*.mp4
+output/
+log_120epochs_b64/
+90_epochs_64_bacth_no_random_crop/
